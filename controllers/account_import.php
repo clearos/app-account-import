@@ -66,8 +66,8 @@ class Account_Import extends ClearOS_Controller
 
         $this->load->module('accounts/status');
 
-        if ($this->status->unhappy()) {
-            $this->status->widget('account_import');
+        if ($this->status->unhappy('openldap')) {
+            $this->status->widget('account_import', 'openldap');
             return;
         }
 
