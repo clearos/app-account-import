@@ -113,7 +113,7 @@ try {
     $in_progress = $account_import->is_import_in_progress();
 
     if ($in_progress && $output == 'stdout') {
-        update_status(0, 0, lang('account_import_already_in_progress'));
+        update_status(0, 0, lang('account_import_import_already_in_progress'));
         exit(0);
     } else if (!$in_progress) {
         if ($status->exists())
@@ -173,7 +173,7 @@ function import()
                     $user_info[$user_fields[0]][$user_fields[1]][$user_fields[2]] = $data[$counter];
             }
 
-            $msg = lang('account_import_currently_importing') . ' ' . $user_info['core']['username'] . '.';
+            $msg = lang('account_import_importing_user:') . ' ' . $user_info['core']['username'] . '.';
             update_status(0, $user_no / $total * 100, $msg);
             $user = User_Factory::create($user_info['core']['username']);
 
@@ -189,7 +189,7 @@ function import()
         }
     }
 
-    update_status(100, 100, lang('account_import_complete'));
+    update_status(100, 100, lang('account_import_import_complete'));
     fclose($handle);
 }
 

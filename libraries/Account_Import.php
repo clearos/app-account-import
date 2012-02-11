@@ -46,6 +46,7 @@ require_once $bootstrap . '/bootstrap.php';
 // T R A N S L A T I O N S
 ///////////////////////////////////////////////////////////////////////////////
 
+clearos_load_language('base');
 clearos_load_language('account_import');
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -190,13 +191,13 @@ class Account_Import extends Engine
             $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
             if (!$file->exists()) {
                 $status = array();
-                $status[] = json_encode(array ('code' => 0, 'msg' => lang('account_import_initializing'), 'progress' => 0));
+                $status[] = json_encode(array ('code' => 0, 'msg' => lang('base_initializing...'), 'progress' => 0));
                 return $status;
             }
             $contents = $file->get_contents_as_array();
             return $contents;
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -226,11 +227,11 @@ class Account_Import extends Engine
         clearos_profile(__METHOD__, __LINE__);
 
         if ($this->is_import_in_progress())
-            throw new Engine_Exception(lang('account_import_already_in_progress'), CLEAROS_ERROR);
+            throw new Engine_Exception(lang('account_import_import_already_in_progress'));
             
         $file = new File(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV, TRUE);
         if (!$file->exists())
-            throw new File_Not_Found_Exception(lang('account_import_csv_not_uploaded'), CLEAROS_ERROR);
+            throw new File_Not_Found_Exception(lang('account_import_csv_file_not_found'));
 
         try {
             $options = array();
@@ -238,7 +239,7 @@ class Account_Import extends Engine
             $shell = new Shell();
             $shell->execute(self::COMMAND_IMPORT, '', TRUE, $options);
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -258,16 +259,16 @@ class Account_Import extends Engine
         try {
             $file = new File(CLEAROS_TEMP_DIR . '/' . $filename, TRUE);
             if (!$file->exists())
-                throw new File_Not_Found_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+                throw new File_Not_Found_Exception(clearos_exception_message($e));
 
             // Move uploaded file to cache
             $file->move_to(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV);
             $file->chown('root', 'root'); 
             $file->chmod(600);
         } catch (File_Not_Found_Exception $e) {
-            throw new File_Not_Found_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new File_Not_Found_Exception(clearos_exception_message($e));
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -306,12 +307,12 @@ class Account_Import extends Engine
         try {
             $file = new File(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV, TRUE);
             if (!$file->exists())
-                throw new File_Not_Found_Exception(lang('account_import_csv_not_uploaded'), CLEAROS_ERROR);
+                throw new File_Not_Found_Exception(lang('account_import_csv_file_not_found'));
             $file->delete();
         } catch (File_Not_Found_Exception $e) {
-            throw new File_Not_Found_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new File_Not_Found_Exception(clearos_exception_message($e));
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -329,12 +330,12 @@ class Account_Import extends Engine
         try {
             $file = new File(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV, TRUE);
             if (!$file->exists())
-                throw new File_Not_Found_Exception(lang('account_import_csv_not_uploaded'), CLEAROS_ERROR);
+                throw new File_Not_Found_Exception(lang('account_import_csv_file_not_found'));
             return $file->get_size();
         } catch (File_Not_Found_Exception $e) {
-            throw new File_Not_Found_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new File_Not_Found_Exception(clearos_exception_message($e));
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -352,21 +353,12 @@ class Account_Import extends Engine
         try {
             $file = new File(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV, TRUE);
             if (!$file->exists())
-                throw new File_Not_Found_Exception(lang('account_import_csv_not_uploaded'), CLEAROS_ERROR);
+                throw new File_Not_Found_Exception(lang('account_import_csv_file_not_found'));
             return count($file->get_contents_as_array()) - 1;
         } catch (File_Not_Found_Exception $e) {
-            throw new File_Not_Found_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new File_Not_Found_Exception(clearos_exception_message($e));
         } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e), CLEAROS_ERROR);
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // P R I V A T E   M E T H O D S
-    ///////////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // V A L I D A T I O N   R O U T I N E S
-    ///////////////////////////////////////////////////////////////////////////////
-
 }

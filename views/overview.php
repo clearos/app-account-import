@@ -41,7 +41,7 @@ $this->lang->load('account_import');
 ///////////////////////////////////////////////////////////////////////////////
 
 echo form_open_multipart('account_import/upload');
-echo form_header(lang('account_import_users'));
+echo form_header(lang('account_import_import_users'));
 
 ///////////////////////////////////////////////////////////////////////////////
 // Form fields and buttons
@@ -55,14 +55,14 @@ if ($import_ready)
     );
 else
     $buttons = array(
-        form_submit_custom('upload', lang('account_import_upload'), 'high'),
-        anchor_custom('account_import/template', lang('account_import_download_template'), 'low')
+        form_submit_custom('upload', lang('account_import_upload_csv_file'), 'high'),
+        anchor_custom('account_import/template', lang('account_import_download_csv_template'), 'low')
     );
 
 echo field_file('csv_file', $filename, lang('account_import_csv_file'), $import_ready);
 
 if ($import_ready) {
-    echo field_file('size', $size, lang('account_import_size'), $import_ready);
+    echo field_file('size', $size, lang('base_file_size'), $import_ready);
     echo field_file('number', $number_of_records, lang('account_import_number_of_records'), $import_ready);
 }
 

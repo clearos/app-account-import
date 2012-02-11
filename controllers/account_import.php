@@ -7,7 +7,7 @@
  * @package    Account_Import
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
@@ -46,7 +46,7 @@ use \clearos\apps\account_import\Account_Import as Import;
  * @package    Account_Import
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
@@ -74,9 +74,9 @@ class Account_Import extends ClearOS_Controller
         // Load dependencies
         //------------------
 
+        $this->lang->load('account_import');
         $this->load->helper('number');
         $this->load->library('account_import/Account_Import');
-        $this->lang->load('account_import');
 
         if ($this->account_import->is_import_in_progress()) {
             redirect('/account_import/progress');
@@ -93,7 +93,7 @@ class Account_Import extends ClearOS_Controller
         // Load views
         //-----------
 
-        $this->page->view_form('account_import/overview', $data, lang('account_import_account_import'));
+        $this->page->view_form('account_import/overview', $data, lang('account_import_app_name'));
     }
 
     /**
@@ -152,13 +152,13 @@ class Account_Import extends ClearOS_Controller
         // Load dependencies
         //------------------
 
+        $this->lang->load('base');
         $this->load->library('account_import/Account_Import');
-        $this->lang->load('account_import');
 
         // Load views
         //-----------
 
         $data = array();
-        $this->page->view_form('account_import/progress', $data, lang('account_import_account_import'));
+        $this->page->view_form('account_import/progress', $data, lang('base_progress'));
     }
 }
