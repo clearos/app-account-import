@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 1.0.2
+Version: 1.0.4
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
@@ -14,7 +14,7 @@ Requires: app-users
 Requires: app-groups
 
 %description
-Perform bulk import of users to the system using the Account Import/Export app.
+Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 %package core
 Summary: Account Import - APIs and install
@@ -23,7 +23,7 @@ Group: ClearOS/Libraries
 Requires: app-base-core
 
 %description core
-Perform bulk import of users to the system using the Account Import/Export app.
+Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 This package provides the core API and libraries.
 
