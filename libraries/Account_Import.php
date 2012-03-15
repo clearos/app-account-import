@@ -53,50 +53,26 @@ clearos_load_language('account_import');
 // D E P E N D E N C I E S
 ///////////////////////////////////////////////////////////////////////////////
 
-
-// Factories
-//----------
-
-use \clearos\apps\users\User_Factory as User;
-use \clearos\apps\users\User_Manager_Factory as User_Manager;
-
-clearos_load_library('users/User_Factory');
-clearos_load_library('users/User_Manager_Factory');
-
 // Classes
 //--------
 
-use \clearos\apps\File_CSV_DataSource as File_CSV_DataSource;
-use \clearos\apps\base\Shell as Shell;
-use \clearos\apps\base\File as File;
-use \clearos\apps\groups\Group as Group;
-use \clearos\apps\groups\Group_Manager as Group_Manager;
-use \clearos\apps\network\Hostname as Hostname;
 use \clearos\apps\base\Engine as Engine;
+use \clearos\apps\base\File as File;
+use \clearos\apps\base\Shell as Shell;
 
-clearos_load_library('/File_CSV_DataSource');
-clearos_load_library('base/Shell');
-clearos_load_library('base/File');
-clearos_load_library('groups/Group');
-clearos_load_library('groups/Group_Manager');
-clearos_load_library('network/Hostname');
 clearos_load_library('base/Engine');
+clearos_load_library('base/File');
+clearos_load_library('base/Shell');
 
 // Exceptions
 //-----------
 
+use \Exception as Exception;
 use \clearos\apps\base\Engine_Exception as Engine_Exception;
 use \clearos\apps\base\File_Not_Found_Exception as File_Not_Found_Exception;
-use \clearos\apps\base\Validation_Exception as Validation_Exception;
-use \clearos\apps\groups\Group_Not_Found_Exception as Group_Not_Found_Exception;
-use \clearos\apps\users\User_Already_Exists_Exception as User_Already_Exists_Exception;
 
 clearos_load_library('base/Engine_Exception');
 clearos_load_library('base/File_Not_Found_Exception');
-clearos_load_library('base/Validation_Exception');
-clearos_load_library('groups/Group_Not_Found_Exception');
-clearos_load_library('users/User_Already_Exists_Exception');
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // C L A S S
