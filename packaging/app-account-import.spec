@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 1.0.10
+Version: 1.1.0
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
@@ -17,7 +17,7 @@ Requires: app-groups
 Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 %package core
-Summary: Account Import - APIs and install
+Summary: Account Import - Core
 License: LGPLv3
 Group: ClearOS/Libraries
 Requires: app-base-core
