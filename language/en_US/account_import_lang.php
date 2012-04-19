@@ -1,6 +1,6 @@
 <?php
 
-$lang['account_import_app_description'] = 'Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.';
+$lang['account_import_app_description'] = 'The Account Import app performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.';
 $lang['account_import_app_name'] = 'Account Import';
 $lang['account_import_csv_file'] = 'CSV File';
 $lang['account_import_csv_file_not_found'] = 'CSV file not found.';
