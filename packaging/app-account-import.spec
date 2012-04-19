@@ -14,7 +14,7 @@ Requires: app-users
 Requires: app-groups
 
 %description
-Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
+The Account Import app performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 %package core
 Summary: Account Import - Core
@@ -23,7 +23,7 @@ Group: ClearOS/Libraries
 Requires: app-base-core
 
 %description core
-Performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
+The Account Import app performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 This package provides the core API and libraries.
 
