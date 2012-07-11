@@ -11,6 +11,7 @@ $lang['account_import_importing_user:'] = 'Importing user:';
 $lang['account_import_import_summary'] = 'Import Summary';
 $lang['account_import_import_users'] = 'Import Users';
 $lang['account_import_no_entries'] = 'No import entries were found.';
+$lang['upload_no_file_selected'] = 'Please select a valid CSV file.';
 $lang['account_import_number_of_records'] = 'Number of Records';
 $lang['account_import_start_import'] = 'Start Import';
 $lang['account_import_unable_to_determine_running_state'] = 'Unable to determine if import is running.';

@@ -120,12 +120,13 @@ class Account_Import extends ClearOS_Controller
             'uid_number', 
             'gid_number'
         );
-        $csv .= "core.username" . ",";
-        $csv .= "core.password" . ",";
         foreach ($info_map['core'] as $key_name => $details) {
             if (in_array($key_name, $hide_core))
                 continue;
             $csv .= "core.$key_name" . ",";
+            // Insert Password
+            if ($key_name == 'username')
+                $csv .= "core.password" . ",";
         }
 
         // Extensions
