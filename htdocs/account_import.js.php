@@ -6,10 +6,10 @@
  * @category   Apps
  * @package    Account_Import
  * @subpackage Javascript
- * @author     ClearCenter <developer@clearcenter.com>
- * @copyright  2011 ClearCenter
- * @license    http://www.clearcenter.com/Company/terms.html ClearSDN license
- * @link       http://www.clearcenter.com/support/documentation/clearos/account_import/
+ * @author     ClearFoundation <developer@clearfoundation.com>
+ * @copyright  2011 ClearFoundation
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
+ * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
 
 ///////////////////////////////////////////////////////////////////////////////
