@@ -165,13 +165,21 @@ class Account_Import extends Engine
 
         try {
             $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
-            if (!$file->exists()) {
-                $status = array();
-                $status[] = json_encode(array ('code' => 0, 'msg' => lang('base_initializing...'), 'progress' => 0));
-                return $status;
-            }
-            $contents = $file->get_contents_as_array();
-            return $contents;
+            $status = array();
+            if (!$file->exists())
+                throw new Engine_Exception(lang('account_import_no_data'));
+
+            $lines = $file->get_contents_as_array();
+
+            if (empty($lines))
+                throw new Engine_Exception(lang('account_import_no_data'));
+            else
+                $lines = array_reverse($lines);
+
+            foreach ($lines as $line)
+                $status[] = json_decode($line);
+            
+            return $status;
         } catch (Exception $e) {
             throw new Engine_Exception(clearos_exception_message($e));
         }
@@ -208,6 +216,8 @@ class Account_Import extends Engine
         $file = new File(self::FOLDER_ACCOUNT_IMPORT . '/' . self::FILE_CSV, TRUE);
         if (!$file->exists())
             throw new File_Not_Found_Exception(lang('account_import_csv_file_not_found'));
+
+        $this->delete_log();
 
         try {
             $options = array();
@@ -266,6 +276,26 @@ class Account_Import extends Engine
             return TRUE;
         } catch (Exception $e) {
             return FALSE;
+        }
+    }
+
+    /**
+     * Delete log file.
+     *
+     * @return void
+     * @throws Engine_Exception
+     */
+
+    function delete_log()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        try {
+            $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
+            if ($file->exists())
+                $file->delete();
+        } catch (Exception $e) {
+            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'account_import';
-$app['version'] = '1.1.0';
+$app['version'] = '1.1.1';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -27,7 +27,7 @@ $app['subcategory'] = lang('base_subcategory_accounts_manager');
 
 $app['requires'] = array(
     'app-users',
-    'app-groups',
+    'app-groups => 1:1.2.3'
 );
 
 $app['core_file_manifest'] = array(

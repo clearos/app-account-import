@@ -73,7 +73,7 @@ class Ajax extends ClearOS_Controller
         clearos_profile(__METHOD__, __LINE__);
 
         header('Cache-Control: no-cache, must-revalidate');
-        header('Expires: Fri, 01 Jan 2010 05:00:00 GMT');
+        header('Content-type: application/json');
 
         // Load dependencies
         //------------------
@@ -82,16 +82,8 @@ class Ajax extends ClearOS_Controller
         $this->lang->load('account_import');
 
         try {
-            $status = $this->account_import->get_progress();
-            $summary = array();
-            $progress = 0;
-            foreach ($status as $line) {
-                $json = json_decode($line);
-                $summary[] = $json->msg;
-                $code = $json->code;
-                $progress = $json->progress;
-            }
-            echo json_encode(Array('code' => $code, 'summary' => $summary, 'progress' => $progress));
+            $logs = $this->account_import->get_progress();
+            echo json_encode(Array('code' => 0, 'logs' => $logs));
         } catch (Exception $e) {
             echo json_encode(Array('code' => clearos_exception_code($e), 'errmsg' => clearos_exception_message($e)));
         }

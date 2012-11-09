@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Account import/export controller.
+ * Account Import progress controller.
  *
  * @category   Apps
  * @package    Account_Import
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
@@ -40,21 +40,21 @@ use \clearos\apps\account_import\Account_Import as Account_Import;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * File upload controller.
+ * Account Import progress controller.
  *
  * @category   Apps
  * @package    Account_Import
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
 
-class Upload extends ClearOS_Controller
+class Progress extends ClearOS_Controller
 {
     /**
-     * Default controller.
+     * Account import progress controller
      *
      * @return view
      */
@@ -64,45 +64,15 @@ class Upload extends ClearOS_Controller
         // Load dependencies
         //------------------
 
-        $this->load->helper('number');
-        $this->load->library('account_import/Account_Import');
         $this->lang->load('account_import');
+        $this->load->library('account_import/Account_Import');
 
-        // Handle form submit
-        //-------------------
+        $data = array();
 
-        if ($this->input->post('reset')) {
-            try {
-                $this->account_import->delete_csv_file();
-                redirect('/account_import');
-            } catch (Exception $e) {
-                $this->page->view_exception($e);
-                return;
-            }
-        } else if ($this->input->post('start')) {
-            try {
-                $this->account_import->import();
-                redirect('/account_import/index/start');
-            } catch (Exception $e) {
-                $this->page->set_message(clearos_exception_message($e));
-                redirect('/account_import');
-            }
-        }
-        $config['upload_path'] = CLEAROS_TEMP_DIR;
-        $config['allowed_types'] = 'csv';
-        $config['overwrite'] = TRUE;
-        $config['file_name'] = Account_Import::FILE_CSV;
+        // Load views
+        //-----------
 
-        $this->load->library('upload', $config);
-
-        if ( ! $this->upload->do_upload('csv_file')) {
-            $this->page->set_message($this->upload->display_errors());
-        } else {
-            $upload = $this->upload->data();
-            $this->account_import->set_csv_file($upload['file_name']);
-            $data['filename'] = $upload['file_name'];
-        }
-
-        redirect('/account_import');
+        $this->page->view_form('progress', $data, lang('account_import_app_name'));
     }
+
 }

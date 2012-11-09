@@ -62,7 +62,14 @@ clearos_load_library('users/User_Factory');
 // Exceptions
 //-----------
 
+use \clearos\apps\base\Validation_Exception as Validation_Exception;
+use \clearos\apps\groups\Group_Not_Found_Exception as Group_Not_Found_Exception;
+use \clearos\apps\users\User_Already_Exists_Exception as User_Already_Exists_Exception;
 use \Exception as Exception;
+
+clearos_load_library('base/Validation_Exception');
+clearos_load_library('groups/Group_Not_Found_Exception');
+clearos_load_library('users/User_Already_Exists_Exception');
 
 ///////////////////////////////////////////////////////////////////////////////
 // M A I N
@@ -165,31 +172,71 @@ function import()
                 continue;
             }
 
+            $password = NULL;
+
+            $group_memberships = array();
+
             for ($counter = 0; $counter < count($data); $counter++) {
                 $user_fields = explode(".", $header[$counter]);
-                if (count($user_fields) == 2)
-                    $user_info[$user_fields[0]][$user_fields[1]] = $data[$counter];
-                else
-                    $user_info[$user_fields[0]][$user_fields[1]][$user_fields[2]] = $data[$counter];
+                if ($user_fields[0] == 'core' && $user_fields[1] == 'password') {
+                    $password = $data[$counter];
+                    continue;
+                }
+                // Group memberships
+                //------------------
+                if ($user_fields[0] == 'groups') {
+                    $groups = array_map('trim', explode(',', $data[$counter]));
+                    foreach ($groups as $group)
+                        $group_memberships[$group] = TRUE;
+                    continue;
+                }
+                if (count($user_fields) == 2) {
+                    // Is plugin
+                    if ($user_fields[0] == 'plugins') {
+                        $user_info[$user_fields[0]][$user_fields[1]] = array ('state' => isset($data[$counter]) ? 1 : 0);
+                    } else {
+                        $user_info[$user_fields[0]][$user_fields[1]] = $data[$counter];
+                    }
+                } else {
+                    // Extensions
+                    if ($user_fields[1] === 'mail' && $user_fields[2] === 'aliases') 
+                        $user_info[$user_fields[0]][$user_fields[1]][$user_fields[2]] = array_map('trim', explode(',', $data[$counter]));
+                    else
+                        $user_info[$user_fields[0]][$user_fields[1]][$user_fields[2]] = $data[$counter];
+                }
             }
 
-            $msg = lang('account_import_importing_user:') . ' ' . $user_info['core']['username'] . '.';
-            update_status(0, $user_no / $total * 100, $msg);
+            $msg = lang('account_import_importing_user') . ' "' . $user_info['core']['username'] . '"';
             $user = User_Factory::create($user_info['core']['username']);
 
             try {
-                $user->add($user_info, $user_info['core']['password']);
+                try {
+                    $user->add($user_info, $password);
+                } catch (Validation_Exception $e) {
+                    // TODO - Should be using User_Already_Exists_Exception but that is not the obj thrown
+                    // in the User_Driver
+                    $msg = preg_replace("/\\.$/", "", clearos_exception_message($e));
+                    $user_no++;
+                    update_status(1, $user_no / $total * 100, $msg . ' (' . $user_info['core']['username'] . ')');
+                    continue;
+                } catch (Group_Not_Found_Exception $e) {
+                    update_status(0, $user_no / $total * 100, $msg . '...');
+                    // Not fatal...just means some plugins were not installed
+                    $msg = preg_replace("/\\.$/", "", clearos_exception_message($e));
+                    update_status(1, $user_no / $total * 100, $msg);
+                }
+                $user->set_group_memberships($group_memberships);
                 $user_no++;
+                update_status(0, $user_no / $total * 100, $msg . '...' . lang('account_import_success'));
             } catch (Exception $e) {
-                // Remove period and add some info about user
-                $msg = preg_replace("/\\.$/", "", clearos_exception_message($e)) . ' (' . $user_info['core']['username'] . ').';
+                $msg = preg_replace("/\\.$/", "", clearos_exception_message($e));
                 $user_no++;
                 update_status(1, $user_no / $total * 100, $msg);
             }
         }
     }
 
-    update_status(100, 100, lang('account_import_import_complete'));
+    update_status(0, 100, lang('account_import_import_complete'));
     fclose($handle);
 }
 

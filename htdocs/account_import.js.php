@@ -39,20 +39,21 @@ require_once $bootstrap . '/bootstrap.php';
 clearos_load_language('account_import');
 clearos_load_language('base');
 
-// TODO: Merge dialog into theme
-
 header('Content-Type: application/x-javascript');
 
 echo "
 
+$(document).ready(function() {
+    get_progress();
+});
 function get_progress() {
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '/app/account_import/ajax/get_progress',
         data: '',
-        success: function(json) {
-            if (json == undefined || json.code == null) {
+        success: function(data) {
+            if (data == undefined || data.code == null) {
                     $('#progress').progressbar({
                         value: 0
                     });
@@ -60,19 +61,35 @@ function get_progress() {
                     return;
             }
                 
-            if (json.code < 0) {
-                clearos_alert('errmsg', json.errmsg);
+            if (data.code < 0) {
+                table_logs.fnClearTable();
             } else {
-                $('#summary').html('');
-                for (var i = 0; i < json.summary.length; i++)
-                    $('#summary').prepend('<div>' + json.summary[i] + '</div>');
-                $('#progress').progressbar({
-                    value: Math.round(json.progress)
-                });
-                // 100 code means end of import
-                if (json.code != 100)
-                    window.setTimeout(get_progress, 1000);
-            }
+                // Logs
+                if (data.logs != undefined && data.logs != null && $('#logs').length > 0) {
+                    table_logs.fnClearTable();
+                    var progress = 0;
+                    for (var index = 0 ; index < data.logs.length; index++) {
+                        if (data.logs[index] == null)
+                            continue;
+                        date = new Date(data.logs[index].timestamp*1000);
+                        span_tag = '<span>';
+                        if (data.logs[index].code != 0)
+                            span_tag = '<span style=\'color: red;\'>';
+                        table_logs.fnAddData([
+                            span_tag + data.logs[index].msg + '</span',
+                            span_tag + $.datepicker.formatDate('M d, yy', date) + ' ' + date.toLocaleTimeString() + '</span>'
+                        ]);
+                        if (index == 0) {
+                            $('#progress').progressbar({
+                                value: Math.round(data.logs[index].progress)
+                            });
+                        }
+                    }
+                    table_logs.fnAdjustColumnSizing();
+                }
+		    }
+
+            window.setTimeout(get_progress, 1000);
         },
         error: function(xhr, text, err) {
             // Don't display any errors if ajax request was aborted due to page redirect/reload
@@ -81,23 +98,6 @@ function get_progress() {
             window.setTimeout(get_progress, 1000);
         }
     });
-}
-
-function clearos_alert(id, message) {
-  $('#theme-page-container').append('<div id=\"' + id + '\" title=\"" . lang('base_warning') . "\">' +
-      '<p>' +
-        '<span class=\"ui-icon ui-icon-alert\" style=\"float:left; margin:0 7px 50px 0;\"></span>' + message +
-      '</p>' +
-    '</div>'
-  );
-  $('#' + id).dialog({
-    modal: true,
-    buttons: {
-      '" . lang('base_close') . "': function() {
-        $(this).dialog('close');
-      }
-    }
-  });
 }
 ";
 

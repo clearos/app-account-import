@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Account import/export controller.
+ * Account Import default controller.
  *
  * @category   Apps
  * @package    Account_Import
@@ -33,7 +33,10 @@
 // D E P E N D E N C I E S
 ///////////////////////////////////////////////////////////////////////////////
 
-use \clearos\apps\account_import\Account_Import as Import;
+use \clearos\apps\accounts\Accounts_Engine as Accounts_Engine;
+use \clearos\apps\accounts\Accounts_Not_Initialized_Exception as Accounts_Not_Initialized_Exception;
+use \clearos\apps\accounts\Accounts_Driver_Not_Set_Exception as Accounts_Driver_Not_Set_Exception;
+use \clearos\apps\groups\Group_Engine as Group_Engine;
 
 ///////////////////////////////////////////////////////////////////////////////
 // C L A S S
@@ -56,10 +59,12 @@ class Account_Import extends ClearOS_Controller
     /**
      * Account_Import default controller
      *
+     * @param String $start force start of import
+     *
      * @return view
      */
 
-    function index()
+    function index($start)
     {
         // Show account status widget if we're not in a happy state
         //---------------------------------------------------------
@@ -78,22 +83,24 @@ class Account_Import extends ClearOS_Controller
         $this->load->helper('number');
         $this->load->library('account_import/Account_Import');
 
-        if ($this->account_import->is_import_in_progress()) {
-            redirect('/account_import/progress');
-            return;
-        }
-        $data['import_ready'] = $this->account_import->is_csv_file_uploaded();
-
-        if ($data['import_ready']) {
-            $data['filename'] = IMPORT::FILE_CSV;
-            $data['size'] = byte_format($this->account_import->get_csv_size(), 1);
-            $data['number_of_records'] = $this->account_import->get_number_of_records();
-        }
 
         // Load views
         //-----------
 
-        $this->page->view_form('account_import/overview', $data, lang('account_import_app_name'));
+        if ($start || $this->account_import->is_import_in_progress()) {
+            $views = array(
+                'account_import/progress',
+                'account_import/logs'
+            );
+        } else {
+            $views = array(
+                'account_import/import',
+                'account_import/logs'
+            );
+        }
+
+        $this->page->view_forms($views, lang('account_import_app_name'));
+
     }
 
     /**
@@ -105,14 +112,23 @@ class Account_Import extends ClearOS_Controller
     function template()
     {
         header('Content-type: application/csv');
-        header('Content-Disposition: attachment; filename=import2.csv');
+        header('Content-Disposition: attachment; filename=import.csv');
         header('Content-Disposition: inline; filename=import.csv');
         header('Pragma: no-cache');
         header('Expires: 0');
 
+        $this->lang->load('account_import');
+        $this->lang->load('base');
         $this->load->factory('users/User_Factory', NULL);
+        $this->load->factory('accounts/Accounts_Factory');
+        $this->load->factory('groups/Group_Manager_Factory');
         $info_map = $this->user->get_info_map();
-        $csv = '';
+        $groups = $this->group_manager->get_list(Group_Engine::FILTER_NORMAL);
+        $groups = array_merge($groups, $this->group_manager->get_list(Group_Engine::FILTER_WINDOWS));
+        $csv = array(
+            'field' => array(),
+            'value' => array()
+        );
         // Core
         $hide_core = array(
             'home_directory', 
@@ -123,43 +139,91 @@ class Account_Import extends ClearOS_Controller
         foreach ($info_map['core'] as $key_name => $details) {
             if (in_array($key_name, $hide_core))
                 continue;
-            $csv .= "core.$key_name" . ",";
-            // Insert Password
-            if ($key_name == 'username')
-                $csv .= "core.password" . ",";
+            $csv['field'][] =  "core.$key_name";
+            switch ($key_name) {
+                case 'username':
+                    $csv['value'][] =  'wshatner';
+                    $csv['field'][] =  "core.password";
+                    $csv['value'][] =  '1234';
+                    break;
+                case 'first_name':
+                    $csv['value'][] =  'William';
+                    break;
+                case 'last_name':
+                    $csv['value'][] =  'Shatner';
+                    break;
+                default:
+                    $csv['value'][] =  '---';
+                    break;
+            }
         }
 
         // Extensions
-        foreach ($info_map['extensions'] as $key_name => $extensions) {
-            foreach($extensions as $key => $extension)
-                $csv .= "extensions." . $key_name . "." . $key . ",";
+        if (! empty($info_map['extensions'])) {
+            foreach ($info_map['extensions'] as $extension => $parameters) {
+                foreach ($parameters as $key => $details) {
+                    // Re-initialize array
+                    $options = array();
+                    if (isset($details['field_priority']) && ($details['field_priority'] === 'hidden')) {
+                        continue;
+                    } else if (isset($details['field_priority']) && ($details['field_priority'] === 'read_only')) {
+                        continue;
+                    }
+
+                    $csv['field'][] =  "extensions.$extension.$key";
+                    if ($details['field_type'] === 'list') {
+                        if ($key === 'country') {
+                            $csv['value'][] =  'CA';
+                        } else if ($key === 'hard_quota') {
+                            $csv['value'][] = '0=No quota, ###=Quota (MB)';
+                        } else {
+                            
+                            foreach ($details['field_options'] as $option => $value) {
+                                if ($key === 'login_shell')
+                                    $options[] = $value;
+                                else
+                                    $options[] = $option . '=' . $value;
+                            }
+                            $csv['value'][] = implode(',', $options);
+                        }
+                    } else if ($details['field_type'] === 'simple_list') {
+                        foreach ($details['field_options'] as $option => $value)
+                            $options[] = $option . '=' . $value;
+                        $csv['value'][] = implode(',', $options);
+                    } else if ($details['field_type'] === 'text') {
+                        if ($key === 'city')
+                            $csv['value'][] = 'Montreal' . ($details['required'] ? '' : ' (Optional)');
+                        else if ($key === 'region')
+                            $csv['value'][] = 'Quebec' . ($details['required'] ? '' : ' (Optional)');
+                        else if ($key === 'mobile' || $key === 'telephone' || $key === 'fax')
+                            $csv['value'][] = '+1.514.555.5555' . ($details['required'] ? '' : ' (Optional)');
+                        else
+                            $csv['value'][] = 'Text' . ($details['required'] ? '' : ' (Optional)');
+                    } else if ($details['field_type'] === 'integer') {
+                        $csv['value'][] = '0';
+                    } else if ($details['field_type'] === 'text_array') {
+                        if ($key === 'aliases')
+                            $csv['value'][] = 'kirk, tjhooker';
+                        else
+                            $csv['value'][] = 'Setting1, Setting2, Setting3';
+                    }
+                }
+            }
         }
 
         // Plugins
-        foreach ($info_map['plugins'] as $plugin => $name) {
-            $csv .= "plugins.$name" . ",";
+        if (! empty($info_map['plugins'])) {
+            foreach ($info_map['plugins'] as $plugin => $name) {
+                $csv['field'][] = "plugins.$name";
+                $csv['value'][] = '0=' . lang('base_no') . ', 1=' . lang('base_yes');
+            }
         }
-        echo substr($csv, 0, strlen($csv) - 1);
-    }
-
-    /**
-     * Progress controller
-     *
-     * @return view
-     */
-
-    function progress()
-    {
-        // Load dependencies
-        //------------------
-
-        $this->lang->load('base');
-        $this->load->library('account_import/Account_Import');
-
-        // Load views
-        //-----------
-
-        $data = array();
-        $this->page->view_form('account_import/progress', $data, lang('base_progress'));
+        if (is_array($groups) && !empty($groups)) {
+            $csv['field'][] = 'groups';
+            $csv['value'][] = implode(',', $groups);
+        }
+        
+        foreach ($csv as $type => $data)
+            echo "\"" . implode("\",\"", $data) . "\"\n";
     }
 }
