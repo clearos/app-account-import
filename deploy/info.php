@@ -43,3 +43,7 @@ $app['core_file_manifest'] = array(
 $app['core_directory_manifest'] = array(
    '/var/clearos/account_import' => array('mode' => '755', 'owner' => 'webconfig', 'group' => 'webconfig')
 );
+
+$app['delete_dependency'] = array(
+    'app-account-import-core'
+);
