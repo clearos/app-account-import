@@ -51,7 +51,7 @@ function get_progress() {
         type: 'POST',
         dataType: 'json',
         url: '/app/account_import/ajax/get_progress',
-        data: '',
+        data: 'ci_csrf_token=' + $.cookie('ci_csrf_token'),
         success: function(data) {
             if (data == undefined || data.code == null) {
                     $('#progress').progressbar({
