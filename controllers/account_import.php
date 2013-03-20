@@ -173,7 +173,7 @@ class Account_Import extends ClearOS_Controller
                     $csv['field'][] =  "extensions.$extension.$key";
                     if ($details['field_type'] === 'list') {
                         if ($key === 'country') {
-                            $csv['value'][] =  'CA';
+                            $csv['value'][] =  'CA (two letter ISO code)';
                         } else if ($key === 'hard_quota') {
                             $csv['value'][] = '0=No quota, ###=Quota (MB)';
                         } else {

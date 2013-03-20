@@ -48,10 +48,10 @@ $(document).ready(function() {
 });
 function get_progress() {
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         dataType: 'json',
         url: '/app/account_import/ajax/get_progress',
-        data: 'ci_csrf_token=' + $.cookie('ci_csrf_token'),
+        data: '',
         success: function(data) {
             if (data == undefined || data.code == null) {
                     $('#progress').progressbar({
