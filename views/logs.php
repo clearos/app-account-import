@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Dynamic DNS view.
+ * Account Import log view.
  *
  * @category   Apps
- * @package    Dynamic_DNS
+ * @package    Account_Import
  * @subpackage Views
  * @author     ClearCenter <developer@clearcenter.com>
  * @copyright  2011 ClearCenter
