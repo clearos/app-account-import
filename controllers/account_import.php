@@ -3,9 +3,9 @@
 /**
  * Account Import default controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
@@ -45,9 +45,9 @@ use \clearos\apps\groups\Group_Engine as Group_Engine;
 /**
  * Account Import/Export controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later

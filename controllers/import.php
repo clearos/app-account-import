@@ -3,9 +3,9 @@
 /**
  * Account Import default controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
@@ -43,9 +43,9 @@ use \clearos\apps\base\File_Not_Found_Exception as File_Not_Found_Exception;
 /**
  * Account Import/Export controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later

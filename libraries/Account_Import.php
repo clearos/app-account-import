@@ -3,9 +3,9 @@
 /**
  * Account import/export class.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Libraries
+ * @category   apps
+ * @package    account-import
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2003-2011 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
@@ -81,9 +81,9 @@ clearos_load_library('base/File_Not_Found_Exception');
 /**
  * Account import/export class.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Libraries
+ * @category   apps
+ * @package    account-import
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2003-2011 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later

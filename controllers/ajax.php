@@ -3,9 +3,9 @@
 /**
  * Account import/export ajax controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
@@ -40,9 +40,9 @@
 /**
  * Account Import/Export ajax controller.
  *
- * @category   Apps
- * @package    Account_Import
- * @subpackage Controllers
+ * @category   apps
+ * @package    account-import
+ * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2011 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
