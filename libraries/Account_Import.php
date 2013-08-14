@@ -167,12 +167,12 @@ class Account_Import extends Engine
             $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
             $status = array();
             if (!$file->exists())
-                throw new Engine_Exception(lang('account_import_no_data'));
+                throw new Engine_Exception(lang('account_import_no_data_found'));
 
             $lines = $file->get_contents_as_array();
 
             if (empty($lines))
-                throw new Engine_Exception(lang('account_import_no_data'));
+                throw new Engine_Exception(lang('account_import_no_data_found'));
             else
                 $lines = array_reverse($lines);
 

@@ -67,7 +67,7 @@ $headers = array(
 echo form_open('account_import');
 
 echo summary_table(
-    lang('account_import_log'),
+    lang('account_import_import_log'),
     $buttons,
     $headers,
     NULL,

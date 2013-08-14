@@ -227,8 +227,8 @@ function import()
                 }
                 $user->set_group_memberships($group_memberships);
                 $user_no++;
-                $msg = lang('account_import_importing_user') . ' "' . $user_info['core']['username'] . '"';
-                update_status(0, $user_no / $total * 100, $msg . '...' . lang('account_import_success'));
+                $msg = lang('account_import_importing_user') . ' - ' . $user_info['core']['username'];
+                update_status(0, $user_no / $total * 100, $msg . ' - ' . lang('base_success'));
             } catch (Exception $e) {
                 $msg = preg_replace("/\\.$/", "", clearos_exception_message($e));
                 $user_no++;
