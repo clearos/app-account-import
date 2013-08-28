@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 1.4.21
+Version: 1.5.0
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
@@ -18,7 +18,7 @@ Requires: app-openldap-directory-core => 1:1.2.3
 The Account Import app performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
 
 %package core
-Summary: Account Import - APIs and install
+Summary: Account Import - Core
 License: LGPLv3
 Group: ClearOS/Libraries
 Requires: app-base-core
