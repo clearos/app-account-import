@@ -58,10 +58,12 @@ clearos_load_language('account_import');
 
 use \clearos\apps\base\Engine as Engine;
 use \clearos\apps\base\File as File;
+use \clearos\apps\base\Script as Script;
 use \clearos\apps\base\Shell as Shell;
 
 clearos_load_library('base/Engine');
 clearos_load_library('base/File');
+clearos_load_library('base/Script');
 clearos_load_library('base/Shell');
 
 // Exceptions
@@ -127,29 +129,8 @@ class Account_Import extends Engine
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        try {
-            $shell = new Shell();
-            $exe = pathinfo(self::COMMAND_IMPORT, PATHINFO_FILENAME);
-            $exitcode = $shell->execute(self::COMMAND_PS, " afx | grep $exe & echo $!", FALSE);
-            if ($exitcode != 0)
-                throw new Engine_Exception(lang('account_import_unable_to_determine_running_state'), CLEAROS_WARNING);
-            $rows = $shell->get_output();
-            $pid = -1;
-            foreach ($rows as $row) {
-                if ($pid < 0) {
-                    $pid = trim($row);
-                    continue;
-                }
-                if (preg_match('/^([0-9]+)\s+.*/', $row, $match)) {
-                    // Bit of a hack...looking at PIDs
-                    if ((intval($match[1]) + 4) < $pid || $match[1] > $pid)
-                        return TRUE;
-                }
-            }
-            return FALSE;
-        } catch (Exception $e) {
-            throw new Engine_Exception(lang('account_import_unable_to_determine_running_state'), CLEAROS_WARNING);
-        }
+        $script = new Script(basename(self::COMMAND_IMPORT));
+        return $script->is_running();
     }
 
     /**
