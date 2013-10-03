@@ -71,8 +71,10 @@ class Account_Import extends ClearOS_Controller
 
         $this->load->module('accounts/status');
 
-        if ($this->status->unhappy('openldap_directory')) {
-            $this->status->widget('account_import', 'openldap_directory');
+        $supported = array('openldap_directory', 'samba_directory');
+
+        if ($this->status->unhappy($supported)) {
+            $this->status->widget('account_import', $supported);
             return;
         }
 

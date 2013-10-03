@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 1.5.1
+Version: 1.5.5
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
@@ -12,7 +12,7 @@ Requires: %{name}-core = 1:%{version}-%{release}
 Requires: app-base
 Requires: app-users
 Requires: app-groups => 1:1.2.3
-Requires: app-openldap-directory-core => 1:1.2.3
+Requires: app-accounts >= 1:1.5.5
 
 %description
 The Account Import app performs bulk import of accounts using an uploaded file in comma separated values (CSV) format.
