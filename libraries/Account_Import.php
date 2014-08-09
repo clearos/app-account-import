@@ -7,7 +7,7 @@
  * @package    account-import
  * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2003-2011 ClearFoundation
+ * @copyright  2003-2014 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
@@ -87,7 +87,7 @@ clearos_load_library('base/File_Not_Found_Exception');
  * @package    account-import
  * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2003-2011 ClearFoundation
+ * @copyright  2003-2014 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/account_import/
  */
@@ -130,6 +130,7 @@ class Account_Import extends Engine
         clearos_profile(__METHOD__, __LINE__);
 
         $script = new Script(basename(self::COMMAND_IMPORT));
+
         return $script->is_running();
     }
 
@@ -144,44 +145,26 @@ class Account_Import extends Engine
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        try {
-            $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
-            $status = array();
-            if (!$file->exists())
-                throw new Engine_Exception(lang('account_import_no_data_found'));
+        $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
+        $status = array();
+        if (!$file->exists())
+            throw new Engine_Exception(lang('account_import_no_data_found'));
 
-            $lines = $file->get_contents_as_array();
+        $lines = $file->get_contents_as_array();
 
-            if (empty($lines))
-                throw new Engine_Exception(lang('account_import_no_data_found'));
-            else
-                $lines = array_reverse($lines);
+        if (empty($lines))
+            throw new Engine_Exception(lang('account_import_no_data_found'));
+        else
+            $lines = array_reverse($lines);
 
-            foreach ($lines as $line)
-                $status[] = json_decode($line);
-            
-            return $status;
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
-        }
+        foreach ($lines as $line)
+            $status[] = json_decode($line);
+        
+        return $status;
     }
 
     /**
-     * Perform an account export.
-     *
-     * @return void
-     * @throws Engine_Exception
-     */
-
-    function export()
-    {
-        clearos_profile(__METHOD__, __LINE__);
-
-        // TODO
-    }
-
-    /**
-     * Perform an account import.
+     * Performs an account import.
      *
      * @return void
      * @throws Engine_Exception, File_Not_Found_Exception
@@ -200,18 +183,15 @@ class Account_Import extends Engine
 
         $this->delete_log();
 
-        try {
-            $options = array();
-            $options['background'] = TRUE;
-            $shell = new Shell();
-            $shell->execute(self::COMMAND_IMPORT, '', TRUE, $options);
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
-        }
+        $options = array();
+        $options['background'] = TRUE;
+
+        $shell = new Shell();
+        $shell->execute(self::COMMAND_IMPORT, '', TRUE, $options);
     }
 
     /**
-     * Put the CSV file in the cache directory, ready for import begin.
+     * Puts the CSV file in the cache directory, ready for import begin.
      *
      * @param string $filename string CSV filename
      *
@@ -234,15 +214,13 @@ class Account_Import extends Engine
             $file->chmod(600);
         } catch (File_Not_Found_Exception $e) {
             throw new File_Not_Found_Exception(clearos_exception_message($e));
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
     /**
-     * Is CSV file uploaded.
+     * Returns state of CSV file upload.
      *
-     * @return boolean TRUE/FALSE
+     * @return boolean state of CSV file upload
      * @throws Engine_Exception, File_Not_Found_Exception
      */
 
@@ -261,7 +239,7 @@ class Account_Import extends Engine
     }
 
     /**
-     * Delete log file.
+     * Deletes log file.
      *
      * @return void
      * @throws Engine_Exception
@@ -271,13 +249,10 @@ class Account_Import extends Engine
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        try {
-            $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
-            if ($file->exists())
-                $file->delete();
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
-        }
+        $file = new File(CLEAROS_TEMP_DIR . "/" . self::FILE_STATUS, FALSE);
+
+        if ($file->exists())
+            $file->delete();
     }
 
     /**
@@ -298,8 +273,6 @@ class Account_Import extends Engine
             $file->delete();
         } catch (File_Not_Found_Exception $e) {
             throw new File_Not_Found_Exception(clearos_exception_message($e));
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
@@ -321,13 +294,11 @@ class Account_Import extends Engine
             return $file->get_size();
         } catch (File_Not_Found_Exception $e) {
             throw new File_Not_Found_Exception(clearos_exception_message($e));
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 
     /**
-     * Get the number of records.
+     * Returns the number of records.
      *
      * @return integer the number of records
      * @throws Engine_Exception, File_Not_Found_Exception
@@ -344,8 +315,6 @@ class Account_Import extends Engine
             return count($file->get_contents_as_array()) - 1;
         } catch (File_Not_Found_Exception $e) {
             throw new File_Not_Found_Exception(clearos_exception_message($e));
-        } catch (Exception $e) {
-            throw new Engine_Exception(clearos_exception_message($e));
         }
     }
 }
