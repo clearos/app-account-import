@@ -61,6 +61,8 @@ function get_progress() {
                     return;
             }
                 
+            var table_logs = get_table_logs();
+
             if (data.code < 0) {
                 table_logs.fnClearTable();
             } else {
