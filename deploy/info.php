@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'account_import';
-$app['version'] = '2.0.5';
+$app['version'] = '2.0.14';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -19,7 +19,7 @@ $app['description'] = lang('account_import_app_description');
 
 $app['name'] = lang('account_import_app_name');
 $app['category'] = lang('base_category_system');
-$app['subcategory'] = lang('base_subcategory_accounts_manager');
+$app['subcategory'] = lang('base_subcategory_account_manager');
 
 /////////////////////////////////////////////////////////////////////////////
 // Packaging

@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 2.0.5
+Version: 2.0.14
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
