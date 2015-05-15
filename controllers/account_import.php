@@ -178,19 +178,14 @@ class Account_Import extends ClearOS_Controller
                             $csv['value'][] =  'CA (two letter ISO code)';
                         } else if ($key === 'hard_quota') {
                             $csv['value'][] = '0=No quota, ###=Quota (MB)';
-                        } else {
-                            
-                            foreach ($details['field_options'] as $option => $value) {
-                                if ($key === 'login_shell')
-                                    $options[] = $value;
-                                else
-                                    $options[] = $option . '=' . $value;
-                            }
-                            $csv['value'][] = implode(',', $options);
                         }
                     } else if ($details['field_type'] === 'simple_list') {
-                        foreach ($details['field_options'] as $option => $value)
-                            $options[] = $option . '=' . $value;
+                        foreach ($details['field_options'] as $option => $value) {
+                            if ($key === 'login_shell')
+                                $options[] = $value;
+                            else
+                                $options[] = $option . '=' . $value;
+                        }
                         $csv['value'][] = implode(',', $options);
                     } else if ($details['field_type'] === 'text') {
                         if ($key === 'city')

@@ -54,9 +54,7 @@ function get_progress() {
         data: '',
         success: function(data) {
             if (data == undefined || data.code == null) {
-                    $('#progress').progressbar({
-                        value: 0
-                    });
+                    clearos_set_progress_bar('progress', 0, null);
                     window.setTimeout(get_progress, 1000);
                     return;
             }
@@ -76,16 +74,13 @@ function get_progress() {
                         date = new Date(data.logs[index].timestamp*1000);
                         span_tag = '<span>';
                         if (data.logs[index].code != 0)
-                            span_tag = '<span style=\'color: red;\'>';
+                            span_tag = '<span class=\'theme-text-alert\'>';
                         table_logs.fnAddData([
                             span_tag + data.logs[index].msg + '</span',
                             span_tag + $.datepicker.formatDate('M d, yy', date) + ' ' + date.toLocaleTimeString() + '</span>'
                         ]);
-                        if (index == 0) {
-                            $('#progress').progressbar({
-                                value: Math.round(data.logs[index].progress)
-                            });
-                        }
+                        if (index == 0)
+                            clearos_set_progress_bar('progress', Math.round(data.logs[index].progress), null);
                     }
                     table_logs.fnAdjustColumnSizing();
                 }
