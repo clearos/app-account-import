@@ -17,5 +17,6 @@ $lang['account_import_no_data_found'] = 'Нет данных.';
 $lang['account_import_no_entries'] = 'Никакие записи импорта не были найдены.';
 $lang['account_import_number_of_records'] = 'Количество записей';
 $lang['account_import_start_import'] = 'Начать импорт';
+$lang['account_import_tooltip_csv'] = 'Ensure your CSV file is formatted properly - it should have values enclosed in quotations and separated by a comma ("value1","value2" etc.).';
 $lang['account_import_unable_to_determine_running_state'] = 'Невозможно определить, если импорт работает.';
 $lang['account_import_upload_csv_file'] = 'Загрузить CSV файл';
