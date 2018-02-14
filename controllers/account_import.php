@@ -170,6 +170,7 @@ class Account_Import extends ClearOS_Controller
                 foreach ($parameters as $key => $details) {
                     // Re-initialize array
                     $options = array();
+
                     if (isset($details['field_priority']) && ($details['field_priority'] === 'hidden')) {
                         continue;
                     } else if (isset($details['field_priority']) && ($details['field_priority'] === 'read_only')) {
@@ -177,6 +178,7 @@ class Account_Import extends ClearOS_Controller
                     }
 
                     $csv['field'][] =  "extensions.$extension.$key";
+
                     if ($details['field_type'] === 'list') {
                         if ($key === 'country') {
                             $csv['value'][] =  'CA (two letter ISO code)';
@@ -190,6 +192,7 @@ class Account_Import extends ClearOS_Controller
                             else
                                 $options[] = $option . '=' . $value;
                         }
+
                         $csv['value'][] = implode(',', $options);
                     } else if ($details['field_type'] === 'text') {
                         if ($key === 'city')
