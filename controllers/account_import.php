@@ -131,6 +131,7 @@ class Account_Import extends ClearOS_Controller
             'field' => array(),
             'value' => array()
         );
+
         // Core
         $hide_core = array(
             'home_directory', 
@@ -138,10 +139,13 @@ class Account_Import extends ClearOS_Controller
             'uid_number', 
             'gid_number'
         );
+
         foreach ($info_map['core'] as $key_name => $details) {
             if (in_array($key_name, $hide_core))
                 continue;
+
             $csv['field'][] =  "core.$key_name";
+
             switch ($key_name) {
                 case 'username':
                     $csv['value'][] =  'wshatner';
@@ -215,6 +219,7 @@ class Account_Import extends ClearOS_Controller
                 $csv['value'][] = '0=' . lang('base_no') . ', 1=' . lang('base_yes');
             }
         }
+
         if (is_array($groups) && !empty($groups)) {
             $csv['field'][] = 'groups';
             $csv['value'][] = implode(',', $groups);
