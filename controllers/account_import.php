@@ -184,6 +184,10 @@ class Account_Import extends ClearOS_Controller
                             $csv['value'][] =  'CA (two letter ISO code)';
                         } else if ($key === 'hard_quota') {
                             $csv['value'][] = '0=No quota, ###=Quota (MB)';
+                        } else if (($key === 'account_flag') || ($key === 'administrator_flag') || ($key === 'state')) {
+                            $csv['value'][] = '0=' . lang('base_disabled') . ', 1=' . lang('base_enabled');
+                        } else {
+                            $csv['value'][] = '';
                         }
                     } else if ($details['field_type'] === 'simple_list') {
                         foreach ($details['field_options'] as $option => $value) {

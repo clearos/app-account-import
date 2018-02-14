@@ -1,7 +1,7 @@
 
 Name: app-account-import
 Epoch: 1
-Version: 2.1.6
+Version: 2.4.0
 Release: 1%{dist}
 Summary: Account Import
 License: GPLv3
@@ -75,6 +75,7 @@ exit 0
 %files core
 %defattr(-,root,root)
 %exclude /usr/clearos/apps/account_import/packaging
+%exclude /usr/clearos/apps/account_import/unify.json
 %dir /usr/clearos/apps/account_import
 %dir %attr(755,webconfig,webconfig) /var/clearos/account_import
 /usr/clearos/apps/account_import/deploy
